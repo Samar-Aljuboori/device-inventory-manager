@@ -2,11 +2,22 @@
 // Include the database connection file to connect with MySQL
 require_once 'db.php';
 
-// Fetch all devices from the database ordered by id descending (newest first)
-$stmt = $conn->query("SELECT * FROM devices ORDER BY id DESC");
+// Check if a search term was submitted
+if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
+    $search = '%' . trim($_GET['search']) . '%';
+    
+    // SQL query with WHERE and LIKE for multiple columns
+    $sql = "SELECT * FROM devices WHERE device_name LIKE :search OR device_number LIKE :search OR device_type LIKE :search ORDER BY id DESC";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':search' => $search]);
+} else {
+    // Regular query if no search is performed
+    $sql = "SELECT * FROM devices ORDER BY id DESC";
+    $stmt = $conn->query($sql);
+}
+
 $devices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +29,14 @@ $devices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="container">
         <!-- Main page title -->
         <h1>Device Inventory Manager</h1>
+        
+        <!-- Search Form -->
+        <form method="GET" action="index.php">
+            <input type="text" name="search" placeholder="Search by name, number, or type..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+            <button type="submit">Search</button>
+            <a href="index.php">Reset</a>
+        </form>
+        <br>
 
         <!-- Devices Table -->
         <table border="1" cellpadding="10" cellspacing="0">
@@ -50,10 +69,10 @@ $devices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </td>
                         </tr>
                     <?php endforeach; ?>
-                <?php else: ?>
+                <? else: ?>
                     <!-- Show message if table is empty -->
                     <tr>
-                        <td colspan="6">No devices found in the database.</td>
+                        <td colspan="7">No devices found in the database.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
