@@ -70,11 +70,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" id="device_type" name="device_type">
         </div>
         <br>
-        <div>
-            <label for="status">Status:</label><br>
-            <input type="text" id="status" name="status">
-        </div>
-        <br>
+<div>
+    <label for="status">Status:</label><br>
+    <select id="status" name="status">
+        <option value="Available">Available</option>
+        <option value="In Use">In Use</option>
+        <option value="Repair">Repair</option>
+        <option value="Reserved">Reserved</option>
+        <option value="Retired">Retired</option>
+    </select>
+</div>
+<br>
         <div>
             <label for="notes">Notes:</label><br>
             <textarea id="notes" name="notes"></textarea>

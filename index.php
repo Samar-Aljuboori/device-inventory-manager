@@ -27,6 +27,7 @@ $devices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <th>Device Number</th>
                     <th>Type</th>
                     <th>Status</th>
+                    <th>Notes</th>
                     <th>Created Date</th>
                     <th>Actions</th>
                 </tr>
@@ -41,10 +42,11 @@ $devices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo htmlspecialchars($device['device_number']); ?></td>
                             <td><?php echo htmlspecialchars($device['device_type']); ?></td>
                             <td><?php echo htmlspecialchars($device['status']); ?></td>
+                            <td><?php echo htmlspecialchars($device['notes']); ?></td>
                             <td><?php echo htmlspecialchars($device['created_date']); ?></td>
                             <td>
                                 <a href="edit.php?id=<?php echo $device['id']; ?>">Edit</a>
-                                <a href="delete.php?id=<?php echo $device['id']; ?>">Delete</a>
+                                <a href="delete.php?id=<?php echo $device['id']; ?>" onclick="return confirm('Are you sure you want to delete this device?');">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
